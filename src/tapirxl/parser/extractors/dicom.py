@@ -3,6 +3,7 @@ from __future__ import annotations
 from tapirxl.parser._helpers import (
     _base_record,
     _dicom_tag_value_explicit_vr_le,
+    _parse_a_assoc_ae_titles,
     _parse_dicom_user_info,
     _safe,
     _slice_ip_tcp_payload,
@@ -29,6 +30,7 @@ def handle(packet, oui_table: dict) -> dict | None:
     assoc_info = {"pdu_type_byte": pdu_type}
 
     impl_uid, impl_ver = _parse_dicom_user_info(pdu_bytes)
+    calling_ae, called_ae = _parse_a_assoc_ae_titles(pdu_bytes)
     if not impl_uid and hasattr(packet, "dicom"):
         impl_uid = getattr(packet.dicom, "tag_2052_uid", "") or ""
     if not impl_ver and hasattr(packet, "dicom"):
@@ -64,6 +66,8 @@ def handle(packet, oui_table: dict) -> dict | None:
         {
             "implementation_class_uid": str(impl_uid) if impl_uid else "",
             "implementation_version_name": str(impl_ver) if impl_ver else "",
+            "calling_ae_title": calling_ae,
+            "called_ae_title": called_ae,
             "sop_class_hints": sop_classes,
             "sop_class_uids_observed": sop_class_uids_observed,
             "philips_image_uid_arc_hits": philips_arc_hit,

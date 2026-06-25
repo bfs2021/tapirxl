@@ -73,6 +73,7 @@ def _derive_hostname(envelope: dict) -> str | None:
         "ntlmssp_target_computer",
         "ntlmssp_workstation",
         "mdns_hostname",
+        "dicom_ae_calling",
     ):
         v = envelope.get(key)
         if v:

@@ -217,6 +217,19 @@ class TestHostnameDerivation:
         rec = build_jsonl_record(env, fused=None, no_llm=True)
         assert rec["hostname"] == "only-mdns.local"
 
+    def test_dicom_ae_calling_fallback(self) -> None:
+        env = _bare_envelope()
+        env["dicom_ae_calling"] = "SONOSITE"
+        rec = build_jsonl_record(env, fused=None, no_llm=True)
+        assert rec["hostname"] == "SONOSITE"
+
+    def test_dicom_ae_calling_does_not_override_dhcp(self) -> None:
+        env = _bare_envelope()
+        env["dhcp_hostname"] = "via-dhcp"
+        env["dicom_ae_calling"] = "SONOSITE"
+        rec = build_jsonl_record(env, fused=None, no_llm=True)
+        assert rec["hostname"] == "via-dhcp"
+
 
 class TestVersionDerivation:
     def test_dicom_software_versions(self) -> None:
