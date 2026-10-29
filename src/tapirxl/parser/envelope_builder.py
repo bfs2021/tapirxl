@@ -137,9 +137,10 @@ def merge_record_into_envelope(env: dict, rec: dict) -> None:
         ensure_pipeline(env, "pipeline_1")
 
     elif proto == "DNS_SD_PTR":
-        svc = rf.get("ptr_domain_name", "")
-        if svc and svc not in env["dns_sd_services"]:
-            env["dns_sd_services"].append(svc)
+        for svc in rf.get("ptr_domain_names") or [rf.get("ptr_domain_name", "")]:
+            svc = str(svc or "")
+            if svc and svc not in env["dns_sd_services"]:
+                env["dns_sd_services"].append(svc)
         ensure_pipeline(env, "pipeline_1")
 
     elif proto == "LLMNR":
