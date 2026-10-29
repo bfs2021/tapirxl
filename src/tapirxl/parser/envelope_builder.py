@@ -265,7 +265,9 @@ def finalize_envelope_from_records(env: dict) -> dict:
     has_llmnr = bool(env["llmnr_queries"] or env["llmnr_hostname"])
 
     pipelines_fired: list[int] = []
-    if env.get("pipeline_1"):
+    # mDNS merges leave pipeline_1 empty; count pipeline 1 as fired when an
+    # mDNS/DNS-SD block will be emitted (same predicate as serialize._to_pipeline_1).
+    if env.get("pipeline_1") or has_mdns or has_dns_sd:
         pipelines_fired.append(1)
     if env.get("pipeline_2"):
         pipelines_fired.append(2)

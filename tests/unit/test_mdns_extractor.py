@@ -51,8 +51,12 @@ class TestMdnsPrinterAnnouncement:
     def test_every_txt_string_is_parsed(self) -> None:
         mdns = _printer_envelope().pipeline_1.mdns
         assert mdns is not None
-        for key in ("txtvers", "ty", "adminurl", "note"):
-            assert key in mdns.txt_parsed, f"TXT key {key!r} missing from {mdns.txt_parsed}"
+        assert mdns.txt_parsed == {
+            "txtvers": "1",
+            "ty": "HP LaserJet M507",
+            "adminurl": "http://NPI300050.local.",
+            "note": "Office 2",
+        }
 
     def test_dns_sd_service_discovered(self) -> None:
         mdns = _printer_envelope().pipeline_1.mdns

@@ -12,7 +12,7 @@ def _field_pos(field) -> int | None:
     try:
         pos = getattr(field, "pos", None)
         return int(pos) if pos is not None else None
-    except TypeError, ValueError:
+    except (TypeError, ValueError):
         return None
 
 
