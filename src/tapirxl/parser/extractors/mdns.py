@@ -51,11 +51,12 @@ def handle_txt(packet, oui_table: dict) -> dict | None:
     rec = _base_record(packet, oui_table, "MDNS_TXT")
     if not rec:
         return None
-    # A TXT record carries one string per dns.txt occurrence (and some stacks
-    # still pack several entries into one string, ';' separated).
-    txt_entries: list[str] = []
-    for txt_raw in txt_values:
-        txt_entries.extend(e.strip() for e in str(txt_raw).split(";") if e.strip())
+    # Each dns_txt occurrence is one TXT string. Do not split on ';': a valid
+    # value can contain a semicolon, and no capture format is known to use it
+    # as a reliable delimiter between strings.
+    txt_entries: list[str] = [
+        str(txt_raw).strip() for txt_raw in txt_values if str(txt_raw).strip()
+    ]
     txt_parsed: dict[str, str] = {}
     for entry in txt_entries:
         if "=" in entry:
