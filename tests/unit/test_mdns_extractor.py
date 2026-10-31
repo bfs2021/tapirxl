@@ -43,6 +43,7 @@ def _printer_envelope() -> HostEnvelope:
 
 class TestMdnsPrinterAnnouncement:
     """Issue #39 acceptance criteria, one mDNS printer announcement."""
+
     def test_mdns_hostname_taken_from_a_record(self) -> None:
         env = _printer_envelope()
         assert env.pipeline_1 is not None and env.pipeline_1.mdns is not None
